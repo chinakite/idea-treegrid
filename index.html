@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>IDEA TreeGrid Demo</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="src/css/idea-treegrid-0.0.1.css">
+
+	<script type="text/javascript" src="lib/jQuery/jquery-2.2.3.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="src/js/idea-treegrid-0.0.1.js"></script>
+</head>
+<body>
+	<h1>Default TreeGrid</h1>
+
+	<div id="defaultTreeGrid"></div>
+
+
+	<script type="text/javascript">
+		var treeData = [
+          {
+            text: 'Parent 1',
+            href: '#parent1',
+            nodes: [
+              {
+                text: 'Child 1',
+                href: '#child1',
+                nodes: [
+                  {
+                    text: 'Grandchild 1',
+                    href: '#grandchild1'
+                  },
+                  {
+                    text: 'Grandchild 2',
+                    href: '#grandchild2'
+                  }
+                ]
+              },
+              {
+                text: 'Child 2',
+                href: '#child2'
+              }
+            ]
+          },
+          {
+            text: 'Parent 2',
+            href: '#parent2'
+          },
+          {
+            text: 'Parent 3',
+            href: '#parent3'
+          },
+          {
+            text: 'Parent 4',
+            href: '#parent4'
+          },
+          {
+            text: 'Parent 5',
+            href: '#parent5'
+          }
+        ];
+
+        $('#defaultTreeGrid').ideaTreeGrid({
+        	data : treeData,
+        	columnDefs : [
+        		{name: "名称", data : 'text', width: "30%"},
+        		{name: "链接", data : 'href', width: "40%"},
+        		{name: "操作", width: "30%", render : function(id, node){
+        			return '<a href="' + node.href + '">编辑</a>';
+        		}}
+        	]
+        });
+	</script>
+</body>
+</html>
