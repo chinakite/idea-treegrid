@@ -314,12 +314,11 @@
 			this.injectStyle();
 
 			this.initialized = true;
+
+			this.buildHeader();
 		}
 
-		this.buildHeader();
-
 		this.$element.append(this.$wrapper.empty());
-
 		// Build tree
 		this.buildTree(this.tree, 0);
 	};
@@ -352,7 +351,7 @@
 				.addClass(node.state.checked ? 'node-checked' : '')
 				.addClass(node.state.disabled ? 'node-disabled': '')
 				.addClass(node.state.selected ? 'node-selected' : '')
-				.addClass(node.searchResult ? 'search-result' : '') 
+				.addClass(node.searchResult ? 'search-result' : '')
 				.attr('data-nodeid', node.nodeId)
 				.attr('style', _this.buildStyleOverride(node));
 
@@ -390,13 +389,13 @@
 
 						// Add node icon
 						if (_this.options.showIcon) {
-							
+
 							var classList = ['node-icon'];
 
 							classList.push(node.icon || _this.options.nodeIcon);
 							if (node.state.selected) {
 								classList.pop();
-								classList.push(node.selectedIcon || _this.options.selectedIcon || 
+								classList.push(node.selectedIcon || _this.options.selectedIcon ||
 												node.icon || _this.options.nodeIcon);
 							}
 
@@ -411,7 +410,7 @@
 
 							var classList = ['check-icon'];
 							if (node.state.checked) {
-								classList.push(_this.options.checkedIcon); 
+								classList.push(_this.options.checkedIcon);
 							}
 							else {
 								classList.push(_this.options.uncheckedIcon);
@@ -554,7 +553,7 @@
 		var target = $(event.target);
 		var node = this.findNode(target);
 		if (!node || node.state.disabled) return;
-		
+
 		var classList = target.attr('class') ? target.attr('class').split(' ') : [];
 		if ((classList.indexOf('expand-icon') !== -1)) {
 
@@ -562,12 +561,12 @@
 			this.render();
 		}
 		else if ((classList.indexOf('check-icon') !== -1)) {
-			
+
 			this.toggleCheckedState(node, _default.options);
 			this.render();
 		}
 		else {
-			
+
 			if (node.selectable) {
 				this.toggleSelectedState(node, _default.options);
 			} else {
@@ -942,7 +941,7 @@
 		this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
 			this.toggleExpandedState(node, options);
 		}, this));
-		
+
 		this.render();
 	};
 
@@ -1092,7 +1091,7 @@
 
 		$.each(identifiers, $.proxy(function (index, identifier) {
 			callback(this.identifyNode(identifier), options);
-		}, this));	
+		}, this));
 	};
 
 	/*
@@ -1127,7 +1126,19 @@
 				modifier += 'i';
 			}
 
-			results = this.findNodes(pattern, modifier);
+			var colDefs = this.options.columnDefs;
+
+			var searchAttr = "text";
+			if(colDefs) {
+				for(var i=0; i<colDefs.length; i++) {
+					if(colDefs[i]['searchable']) {
+						searchAttr = colDefs[i]['data'];
+						break;
+					}
+				}
+			}
+
+			results = this.findNodes(pattern, modifier, searchAttr);
 
 			// Add searchResult property to all matching nodes
 			// This will be used to apply custom styles
@@ -1163,9 +1174,9 @@
 		});
 
 		if (options.render) {
-			this.render();	
+			this.render();
 		}
-		
+
 		this.$element.trigger('searchCleared', $.extend(true, {}, results));
 	};
 
